@@ -1,0 +1,63 @@
+:root{
+  --bg:#00008b;
+  --shadow-dark:rgba(0,0,0,0.22);
+  --shadow-light:rgba(255,255,255,0.12);
+  --radius:20px;
+}
+
+/* Full‑page centering lives on the body itself */
+body{
+  margin:0;
+  height:100vh;
+  background:var(--bg);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial,sans-serif;
+  color:#ffffff;
+}
+
+.neumorphic{
+  background:var(--bg);
+  border-radius:var(--radius);
+  box-shadow:4px 4px 8px var(--shadow-dark),
+             -4px -4px 8px var(--shadow-light);
+}
+
+.neumorphic-inset{
+  background:var(--bg);
+  border-radius:var(--radius);
+  box-shadow:inset 4px 4px 8px var(--shadow-dark),
+             inset -4px -4px 8px var(--shadow-light);
+}
+
+.neumorphic-card{padding:30px;text-align:center;}
+
+.neumorphic-input{
+  padding:15px;
+  font-size:20px;                     /* visibly larger */
+  width:100%;
+  color:#ffffff;
+  border:none;outline:none;margin-bottom:25px;
+  border-radius:var(--radius);
+  background:var(--bg);
+  box-shadow:inset 4px 4px 8px var(--shadow-dark),
+             inset -4px -4px 8px var(--shadow-light);
+}
+
+.neumorphic-input::placeholder{color:#d0d8ff;font-size:20px;}
+
+.neumorphic-button{
+  padding:15px 30px;
+  font-size:16px;
+  color:#dfe4ff;border:none;cursor:pointer;
+  border-radius:var(--radius);background:var(--bg);
+  box-shadow:4px 4px 8px var(--shadow-dark),
+             -4px -4px 8px var(--shadow-light);
+  transition:all .3s ease;
+}
+
+.neumorphic-button:active{
+  box-shadow:inset 4px 4px 8px var(--shadow-dark),
+             inset -4px -4px 8px var(--shadow-light);
+}

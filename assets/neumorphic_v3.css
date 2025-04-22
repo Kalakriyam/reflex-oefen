@@ -1,0 +1,57 @@
+:root{
+  --bg:#00008b;                     /* dark blue base */
+  --shadow-dark:rgba(0,0,0,0.22);   /* softer shadow */
+  --shadow-light:rgba(255,255,255,0.12);
+  --radius:20px;
+  --font:18px;
+}
+
+/* Everything sits on the same dark‑blue */
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:#fff;}
+
+.neumorphic{
+  background:var(--bg);
+  border-radius:var(--radius);
+  box-shadow:4px 4px 8px var(--shadow-dark),
+             -4px -4px 8px var(--shadow-light);
+}
+
+.neumorphic-inset{
+  background:var(--bg);
+  border-radius:var(--radius);
+  box-shadow:inset 4px 4px 8px var(--shadow-dark),
+             inset -4px -4px 8px var(--shadow-light);
+}
+
+.neumorphic-card{padding:30px;text-align:center;}
+
+.neumorphic-input{
+  padding:15px;
+  font-size:var(--font);
+  width:100%;
+  color:#ffffff;
+  border:none;outline:none;margin-bottom:25px;
+  border-radius:var(--radius);
+  background:var(--bg);
+  box-shadow:inset 4px 4px 8px var(--shadow-dark),
+             inset -4px -4px 8px var(--shadow-light);
+}
+
+.neumorphic-input::placeholder{color:#d0d8ff;font-size:var(--font);}
+
+.neumorphic-button{
+  padding:15px 30px;
+  font-size:16px;
+  color:#dfe4ff;
+  border:none;cursor:pointer;
+  border-radius:var(--radius);
+  background:var(--bg);
+  box-shadow:4px 4px 8px var(--shadow-dark),
+             -4px -4px 8px var(--shadow-light);
+  transition:all .3s ease;
+}
+
+.neumorphic-button:active{
+  box-shadow:inset 4px 4px 8px var(--shadow-dark),
+             inset -4px -4px 8px var(--shadow-light);
+}

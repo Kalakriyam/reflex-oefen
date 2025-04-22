@@ -1,0 +1,48 @@
+import reflex as rx
+
+
+class State(rx.State):
+    submitted_name: str = ""
+
+    def handle_submit(self, form_data: dict):
+        name = form_data.get("name", "").strip()
+        if name:
+            self.submitted_name = name
+
+    @rx.var
+    def greeting(self) -> str:
+        return f"Hello {self.submitted_name}"
+
+
+def index() -> rx.Component:
+    return rx.center(
+        rx.form(
+            rx.vstack(
+                rx.input(
+                    name="name",
+                    placeholder="What is your name?",
+                    width="20em",
+                ),
+                rx.button(
+                    "Submit",
+                    type="submit",
+                    width="10em",
+                    transition="transform 300ms ease",
+                    _hover={"transform": "scale(1.05)"},
+                ),
+                rx.cond(
+                    State.submitted_name != "",
+                    rx.text(State.greeting, font_size="2em"),
+                ),
+                align="center",
+            ),
+            on_submit=State.handle_submit,
+        ),
+        width="100%",
+        height="100vh",
+        background_image="linear-gradient(45deg, darkblue 0%, black 100%)",
+    )
+
+
+app = rx.App()
+app.add_page(index, title="Hello Name")
