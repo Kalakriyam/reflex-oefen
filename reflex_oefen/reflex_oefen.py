@@ -19,33 +19,18 @@ class State(rx.State):
     complete = False
     name = ""
     greeting = ""
-    image_data = ""
 
     def get_image(self):
-        """Generate an image from the prompt and store it as a base-64 data-URI
-        so the frontend receives the actual picture, not an expiring link.
-        """
+        """Get the image from the prompt."""
         if self.prompt == "snorren":
             return rx.window_alert("Hoi schatje, ik wist niet dat jij het was :-)")
 
-        # show spinner
         self.processing, self.complete = True, False
         yield
-
-        # OpenAI Python ≥ 1.12 – Images endpoint, return base-64 instead of URL
         response = openai_client.images.generate(
-            model="dall-e-3",          # image model – GPT-4.1 is a chat model
-            prompt=self.prompt,
-            n=1,
-            size="1024x1024",
-            response_format="b64_json"  # <- this gives you raw image data
+            prompt=self.prompt, n=1, size="1024x1024"
         )
-
-        # build a data-URI the <img> tag can display
-        b64_png = response.data[0].b64_json
-        self.image_data = f"data:image/png;base64,{b64_png}"
-
-        # stop spinner
+        self.image_url = response.data[0].url
         self.processing, self.complete = False, True
     
     def set_greeting(self):
@@ -56,86 +41,115 @@ class State(rx.State):
         """Set the user's name."""
         self.name = name
 
-def browse():
-    return rx.center(
-        rx.card(
-            # hier komt je kaart-inhoud
-            rx.text("Dit is een mooie kaart"),
-            rx.button("Klik hier"),
-            padding="20px",
-        border_radius="10px",
-        box_shadow="0 4px 8px rgba(0,0,0,0.2)",
-        bg="white",
-        width="400px",  # of wat je wilt
-        ),
-    width="100%",
-    height="100vh",
-    bg="#f0f0f0"  # achtergrondkleur van de pagina
-    )
 
 def index():
-    return rx.vstack(
-        rx.hstack(
-            rx.link("Ga naar Browse", href="/browse"),
-            rx.spacer(),
-            rx.link("Ga naar Conversation", href="/conversation"),
-            width="100%",
-        ),
-        # First container - Image generation
-        rx.center(
-            rx.vstack(
-                rx.heading("Voice UI", font_size="1.5em"),
-                rx.button(
-                    "I'll create an image based on the text below:",
-                    on_click=State.get_image,
-                    width="25em",
-                    loading=State.processing
-                ),
-                rx.input(
-                    placeholder="Schrijf hier een tekst",
-                    on_blur=State.set_prompt,
-                    width="20em",
-                ),
-                rx.cond(
-                    State.complete,
-                    rx.image(src=State.image_url, width="20em"),
-                ),
-                align="center",
+    return rx.hstack(
+        # Left column - Create/Browse/Edit
+        rx.vstack(
+            rx.card(
+                rx.text("Create", font_size="1.5em"),
+                size="2",
+                width="90%",
+                height="15vh",
+                margin_bottom="1em",
+                box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
+                border_radius="8px",
+                background="linear-gradient(145deg, #daffda, #c4ecc4)",
             ),
-            width="50%",
-            height="40vh",
+            rx.card(
+                rx.text("Browse", font_size="1.5em"),
+                size="2",
+                width="90%",
+                height="15vh",
+                margin_bottom="1em",
+                box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
+                border_radius="8px",
+                background="linear-gradient(145deg, #daffda, #c4ecc4)",
+            ),
+            rx.card(
+                rx.text("Edit", font_size="1.5em"),
+                size="2",
+                width="90%",
+                height="15vh",
+                margin_bottom="1em",
+                box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
+                border_radius="8px",
+                background="linear-gradient(145deg, #daffda, #c4ecc4)",
+            ),
+            align="center",
+            justify="center",
+            width="33.33%",
+            height="100vh",
             bg="linear-gradient(45deg, #ccffcc 0%, #add8e6 100%)",
+            padding="2em",
         ),
         
-        # Second container - Conversation
-        rx.center(
-            rx.vstack(
-                rx.heading("Conversation", font_size="1.5em"),
-                rx.button(
-                    "Choose Voice",
-                    width="25em",
-                    on_click=State.set_greeting,
-                ),
-                rx.input(
-                    placeholder="Wat is je naam?",
-                    on_blur=State.set_name,
-                    width="25em",
-                ),
-                rx.cond(
-                    State.greeting != "",
-                    rx.text(State.greeting),
-                    rx.text(""),
-                ),
-                align="center",
+        # Middle column - Live Conversation
+        rx.vstack(
+            rx.card(
+                rx.text("Chat Interface", font_size="1.5em"),
+                size="2",
+                width="90%",
+                height="60%",
+                box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
+                border_radius="8px",
+                background="linear-gradient(145deg, #ffdfdf, #ecc4c4)",
             ),
-            width="50%",
-            height="40%",
+            align="center",
+            justify="center",
+            width="33.33%",
+            height="100vh",
             bg="linear-gradient(45deg, #ffcccc 0%, #add8e6 100%)",
-            margin_top="1em",
-            align_self="flex-end",
+            padding="2em",
+        ),
+        
+        # Right column - Ideate/Organize/Visualize
+        rx.vstack(
+            rx.card(
+                rx.text("Ideate", font_size="1.5em"),
+                size="2",
+                width="90%",
+                height="15vh",
+                margin_bottom="1em",
+                box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
+                border_radius="8px",
+                background="linear-gradient(145deg, #eddcff, #d4c4e6)",
+            ),
+            rx.card(
+                rx.text("Organize", font_size="1.5em"),
+                size="2",
+                width="90%",
+                height="15vh",
+                margin_bottom="1em",
+                box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
+                border_radius="8px",
+                background="linear-gradient(145deg, #eddcff, #d4c4e6)",
+            ),
+            rx.card(
+                rx.text("Visualize", font_size="1.5em"),
+                size="2",
+                width="90%",
+                height="15vh",
+                margin_bottom="1em",
+                box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
+                border_radius="8px",
+                background="linear-gradient(145deg, #eddcff, #d4c4e6)",
+            ),
+            align="center",
+            justify="center",
+            width="33.33%",
+            height="100vh",
+            bg="linear-gradient(45deg, #e6ccff 0%, #add8e6 100%)",
+            padding="2em",
         ),
         width="100%",
+        height="100vh",
+        spacing="0",
     )
+
+
+def browse():
+    return rx.text("Browse pagina")
 
 def conversation():
     return rx.text("Conversation pagina")
@@ -143,4 +157,4 @@ def conversation():
 app = rx.App()
 app.add_page(index, title="Reflex: Voice UI")
 app.add_page(browse, title="Browse pagina")
-# app.add_page(conversation, title="Conversation pagina")
+app.add_page(conversation, title="Conversation pagina")
