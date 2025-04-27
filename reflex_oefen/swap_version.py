@@ -21,7 +21,13 @@ class State(rx.State):
     greeting = ""
     chat_mode = "hidden"
     
-
+    def set_greeting(self):
+        """Set the greeting with the user's name."""
+        self.greeting = f"Hallo {self.name}"
+        
+    def set_name(self, name):
+        """Set the user's name."""
+        self.name = name
 
 # ── 1.  NEW chat_box helper  ─────────────────────────────────────────────
 def chat_box() -> rx.Component:
@@ -45,12 +51,19 @@ def chat_box() -> rx.Component:
             # style={"flex": 1},
         ),
         
-
+        rx.divider(), # sharp line at the bottom of the message history
+        rx.input(
+            placeholder="Type …",
+            width="100%",
+            
+            # px="1em",
+            # style={"paddingBottom": "2em"},
+        ),
         spacing="1", # only 0, 1, 2, etc are allowed. No decimals, no 'em'
         height="100%",
-        width="90%",
+        width="100%",
         pb="2px",
-        # justify="start",
+        # justify="between",
     )
 
 def index():
@@ -62,7 +75,7 @@ def index():
                 size="2",
                 width="90%",
                 height="30vh",
-                margin_bottom="2em",
+                margin_bottom="1.5em",
                 box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
                 border_radius="10px",
                 background="linear-gradient(145deg, #ccffd8, #b8e6c2)",
@@ -72,7 +85,7 @@ def index():
                 size="2",
                 width="90%",
                 height="30vh",
-                margin_bottom="0em",
+                margin_bottom="1em",
                 box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
                 border_radius="10px",
                 background="linear-gradient(145deg, #d8ffcc, #c2e6b8)",
@@ -97,23 +110,13 @@ def index():
                     transition="opacity 0.25s ease",
                     _hover={"opacity": 1},
                     _focus_within={"opacity": 1},
-                    height="80%",
+                    height="100%",
                     width="100%",
-                    border="1px solid black",
-                ),
-                rx.divider(), # sharp line at the bottom of the message history
-                rx.input(
-                    placeholder="Type …",
-                    width="100%",
-                    
-                    # px="1em",
-                    # style={"paddingBottom": "2em"},
                 ),
                 size="2",
                 width="90%",
                 height="70%",
                 box_shadow="5px 5px 10px rgba(0,0,0,0.09), -5px -5px 10px rgba(255,255,255,0.4)",
-                # border="1px solid black",
                 border_radius="10px",
                 background="linear-gradient(145deg, #ffdfcc, #e6c8b8)",
             ),
@@ -132,7 +135,7 @@ def index():
                 size="2",
                 width="90%",
                 height="30vh",
-                margin_bottom="2em",
+                margin_bottom="1.5em",
                 box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
                 border_radius="10px",
                 background="linear-gradient(145deg, #d8ccff, #c2b8e6)",
@@ -142,7 +145,7 @@ def index():
                 size="2",
                 width="90%",
                 height="30vh",
-                margin_bottom="0em",
+                margin_bottom="1em",
                 box_shadow="5px 5px 10px rgba(0, 0, 0, 0.09), -5px -5px 10px rgba(255, 255, 255, 0.4)",
                 border_radius="10px",
                 background="linear-gradient(145deg, #ccccff, #b8b8e6)",
